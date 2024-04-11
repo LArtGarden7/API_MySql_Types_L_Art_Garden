@@ -5,4 +5,5 @@ export interface DetallePedido {
     Cantidad: number;
     PrecioUnitario: number;
     Subtotal: number;
+    IdEstado: number;
 }
