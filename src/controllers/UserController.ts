@@ -4,7 +4,7 @@ import path from 'path';
 import bcrypt from 'bcrypt';
 import { authenticateToken, authorizeRole } from '../middleware/AutenticacionDeTokens';
 import jwt from 'jsonwebtoken';
-import { RequestHandler,Request, Response, NextFunction } from 'express';
+import { RequestHandler,Request, Response, NextFunction, response } from 'express';
 import { connection } from '../config/dbconfig';
 import { User } from '../models/User';
 import { ParamsDictionary } from 'express-serve-static-core';
@@ -25,7 +25,7 @@ const storage = multer.diskStorage({
 
   export const getUserByEmailAndPassword: RequestHandler = async (req: Request, res: Response) => {
     const { CorreoElectronico, Contrasenia } = req.body;
-
+    console.log("Correo",CorreoElectronico, "contraseña: ", Contrasenia);
     const query = 'SELECT * FROM Usuarios WHERE CorreoElectronico = ?';
     connection.query(query, [CorreoElectronico], async (err, results) => {
         if (err) {
@@ -38,7 +38,8 @@ const storage = multer.diskStorage({
                     const token = jwt.sign({ id: results[0].ID, role: results[0].TipoUsuarioID }, process.env.ACCESS_TOKEN_SECRET as string);
                     delete results[0].Contrasenia;
                     // Asegúrate de reemplazar 'http://localhost:3000' con la URL de tu servidor
-                    const imageUrl = `http://localhost:3001/api/userImage/${results[0].Foto}`;
+                    const imageUrl = path.basename(results[0].Foto);
+                    console.log(response);
                     res.status(200).json({ user: { ...results[0], Foto: imageUrl }, token });
                 } else {
                     res.status(401).json({ message: 'Credenciales incorrectas' });

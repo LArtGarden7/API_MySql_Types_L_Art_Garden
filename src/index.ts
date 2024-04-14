@@ -18,9 +18,7 @@ import comentariosResenasProductosRoutes from './routes/ComentarioResenaProducto
 import cancelacionesRoutes from './routes/CancelacionesRoutes';
 import devolucionesRoutes from './routes/DevolucionesRoutes';
 
-
 dotenv.config();
-
 
 const app = express();
 const port = process.env.PORT || 3000;
@@ -46,10 +44,6 @@ app.use('/api', direccionesEnvioRoutes);
 app.use('/api', comentariosResenasProductosRoutes);
 app.use('/api', cancelacionesRoutes);
 app.use('/api', devolucionesRoutes);
-
-
-
-
 
 // Iniciar el servidor
 app.listen(port, () => {

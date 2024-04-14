@@ -6,7 +6,7 @@ const router = express.Router();
 
 router.get('/userImage/:filename', getUserImage);
 router.get('/users', getAllUsers);
-router.get('/user', getUserByEmailAndPassword);
+router.post('/user', getUserByEmailAndPassword);
 router.post('/users', createUser);
 router.put('/users/:id', updateUser);
 router.delete('/users/:id', deleteUser);
