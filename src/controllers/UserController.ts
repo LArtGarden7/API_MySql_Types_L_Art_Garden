@@ -23,6 +23,7 @@ const storage = multer.diskStorage({
   const upload = multer({ storage: storage });
   
 
+  
   export const getUserByEmailAndPassword: RequestHandler = async (req: Request, res: Response) => {
     const { CorreoElectronico, Contrasenia } = req.body;
     console.log("Correo",CorreoElectronico, "contraseña: ", Contrasenia);
