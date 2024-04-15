@@ -4,9 +4,14 @@ import { Producto } from '../models/Producto';
 
 // Función para crear un nuevo producto
 
-export const getAllProducto = (req: Request, res:Response)=>
-{
-    const query = 'SELECT * FROM Productos';
+export const getAllProducto = (req: Request, res:Response) => {
+    const query = `
+        SELECT Productos.*, Florerias.NombreFloreria, CategoriasProductos.NombreCategoria
+        FROM Productos 
+        INNER JOIN Inventario ON Productos.IDInventario = Inventario.IDInventario
+        INNER JOIN Florerias ON Inventario.IDFloreria = Florerias.ID
+        INNER JOIN CategoriasProductos ON Productos.IDCategoria = CategoriasProductos.ID
+    `;
 
     connection.query(query, (err, results) => {
         if (err) {
