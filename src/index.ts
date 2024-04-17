@@ -7,7 +7,7 @@ import tipoUsuarioRoutes from './routes/TipoUsuarioRoutes';
 import inventarioRoutes from './routes/InventarioRoutes';
 import categoriasProductosRoutes from './routes/CategoriaProductoRoutes';
 import productoRoutes from './routes/ProductoRoutes';
-import pedidosRoutes from './routes/PedidoRoutes';
+import pedidosRoutes from './routes/PedidoRoutes';  
 import detallesPedidoRoutes from './routes/DetallesPedidoRoutes';
 import metodosPagoRoutes from './routes/MetodoPagoRoutes';
 import estadosRoutes from './routes/EstadoRoutes';

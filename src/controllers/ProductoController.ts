@@ -1,8 +1,45 @@
 import { Request, Response } from 'express';
 import { connection } from '../config/dbconfig';
 import { Producto } from '../models/Producto';
+import multer from 'multer';
+import path from 'path';
 
-// Función para crear un nuevo producto
+// Configuración de multer
+const storage = multer.diskStorage({
+    destination: function (req, file, cb) {
+      cb(null, 'uploads/')
+    },
+    filename: function (req, file, cb) {
+      cb(null, Date.now() + path.extname(file.originalname)) //Appending extension
+    }
+});
+const upload = multer({ storage: storage });
+
+export const createProductos = [upload.fields([{ name: 'Imagen1', maxCount: 1 }, { name: 'Imagen2', maxCount: 1 }, { name: 'Imagen3', maxCount: 1 }, { name: 'Imagen4', maxCount: 1 }, { name: 'Imagen5', maxCount: 1 }]), (req: Request, res: Response) => {
+    const producto: Producto = req.body;
+
+    // Guardar las rutas de las imágenes en el producto
+    if (req.files) {
+        const files = req.files as { [fieldname: string]: Express.Multer.File[] };
+        if (files.Imagen1) producto.Imagen1 = files.Imagen1[0].path;
+        if (files.Imagen2) producto.Imagen2 = files.Imagen2[0].path;
+        if (files.Imagen3) producto.Imagen3 = files.Imagen3[0].path;
+        if (files.Imagen4) producto.Imagen4 = files.Imagen4[0].path;
+        if (files.Imagen5) producto.Imagen5 = files.Imagen5[0].path;
+    }
+
+    const query = 'INSERT INTO Productos SET ?';
+
+    connection.query(query, producto, (err, result) => {
+        if (err) {
+            console.error('Error al crear producto:', err);
+            res.status(500).json({ message: 'Error interno del servidor' });
+        } else {
+            res.status(201).json({ message: 'Producto creado exitosamente', productID: result.insertId });
+        }
+    });
+}];
+
 
 export const getAllProducto = (req: Request, res:Response) => {
     const query = `
@@ -24,19 +61,19 @@ export const getAllProducto = (req: Request, res:Response) => {
     });
 }
 
-export const createProducto = (req: Request, res: Response) => {
-    const producto: Producto = req.body;
-    const query = 'INSERT INTO Productos SET ?';
+// export const createProducto = (req: Request, res: Response) => {
+//     const producto: Producto = req.body;
+//     const query = 'INSERT INTO Productos SET ?';
 
-    connection.query(query, producto, (err, result) => {
-        if (err) {
-            console.error('Error al crear producto:', err);
-            res.status(500).json({ message: 'Error interno del servidor' });
-        } else {
-            res.status(201).json({ message: 'Producto creado exitosamente', productoID: result.insertId });
-        }
-    });
-};
+//     connection.query(query, producto, (err, result) => {
+//         if (err) {
+//             console.error('Error al crear producto:', err);
+//             res.status(500).json({ message: 'Error interno del servidor' });
+//         } else {
+//             res.status(201).json({ message: 'Producto creado exitosamente', productoID: result.insertId });
+//         }
+//     });
+// };
 
 // Función para obtener un producto por su ID
 export const getProductoById = (req: Request, res: Response) => {

@@ -1,6 +1,7 @@
 import { Request, Response } from 'express';
 import { connection } from '../config/dbconfig';
 import { Floreria } from '../models/Floreria';
+import multer from 'multer';
 
 
 export const getAllFlowers = ((req: Request, res:Response)=>{
@@ -16,9 +17,29 @@ export const getAllFlowers = ((req: Request, res:Response)=>{
         }
     });
 });
+//--------------------------------------------------------------------------------------------------------------
 
-export const createFloreria = (req: Request, res: Response) => {
+const storage = multer.diskStorage({
+    destination: function (req, file, cb) {
+        cb(null, './uploads/');
+    },
+    filename: function (req, file, cb) {
+        cb(null, new Date().toISOString().replace(/:/g, '-') + file.originalname);
+    }
+});
+
+const upload = multer({ storage: storage });
+
+export const createFloreria = [upload.single('Foto'), (req: Request, res: Response) => {
+    console.log('req.body:', req.body); // Imprime el cuerpo de la solicitud
+    console.log('req.file:', req.file); // Imprime el archivo de la solicitud
+
     const floreria = req.body;
+    if (!req.file || !req.file.path) {
+        floreria.Foto = null;
+    } else {
+        floreria.Foto = req.file.path;
+    }
 
     const query = 'CALL InsertarFloreria(?, ?, ?, ?, ?, ?, ?, ?)';
 
@@ -43,8 +64,8 @@ export const createFloreria = (req: Request, res: Response) => {
             }
         }
     );
-};
-
+}];
+//--------------------------------------------------------------------------------------------------------------
 
 
 export const getFloreriaById = (req: Request, res: Response) => {
