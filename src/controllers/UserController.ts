@@ -19,12 +19,10 @@ const storage = multer.diskStorage({
     filename: function (req, file, cb) {
       cb(null, Date.now() + path.extname(file.originalname)) //Appending extension
     }
-  })
-  const upload = multer({ storage: storage });
-  
+})
+const upload = multer({ storage: storage });
 
-  
-  export const getUserByEmailAndPassword: RequestHandler = async (req: Request, res: Response) => {
+export const getUserByEmailAndPassword: RequestHandler = async (req: Request, res: Response) => {
     const { CorreoElectronico, Contrasenia } = req.body;
     console.log("Correo",CorreoElectronico, "contraseña: ", Contrasenia);
     const query = 'SELECT * FROM Usuarios WHERE CorreoElectronico = ?';
@@ -38,9 +36,12 @@ const storage = multer.diskStorage({
                 if (match) {
                     const token = jwt.sign({ id: results[0].ID, role: results[0].TipoUsuarioID }, process.env.ACCESS_TOKEN_SECRET as string);
                     delete results[0].Contrasenia;
-                    // Asegúrate de reemplazar 'http://localhost:3000' con la URL de tu servidor
-                    const imageUrl = path.basename(results[0].Foto);
-                    console.log(response);
+                    let imageUrl;
+                    if (results[0].Foto) {
+                        imageUrl = `http://localhost:3000/api/users/image/${path.basename(results[0].Foto)}`;
+                    } else {
+                        imageUrl = null; // o puedes poner una URL de imagen predeterminada
+                    }
                     res.status(200).json({ user: { ...results[0], Foto: imageUrl }, token });
                 } else {
                     res.status(401).json({ message: 'Credenciales incorrectas' });
@@ -51,6 +52,7 @@ const storage = multer.diskStorage({
         }
     });
 };
+
 export const getUserImage: RequestHandler = (req, res) => {
     const filename = req.params.filename;
     const imagePath = path.resolve(process.env.IMAGE_DIR || 'uploads', filename);
