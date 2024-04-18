@@ -17,6 +17,7 @@ import direccionesEnvioRoutes from './routes/DireccionesEnvioRoutes';
 import comentariosResenasProductosRoutes from './routes/ComentarioResenaProductoRoutes';
 import cancelacionesRoutes from './routes/CancelacionesRoutes';
 import devolucionesRoutes from './routes/DevolucionesRoutes';
+import tarjetasCreditoRoutes from './routes/TarjetaCreditoRoutes';
 
 dotenv.config();
 
@@ -44,6 +45,7 @@ app.use('/api', direccionesEnvioRoutes);
 app.use('/api', comentariosResenasProductosRoutes);
 app.use('/api', cancelacionesRoutes);
 app.use('/api', devolucionesRoutes);
+app.use('/api', tarjetasCreditoRoutes);
 
 // Iniciar el servidor
 app.listen(port, () => {
