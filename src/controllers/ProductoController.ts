@@ -60,6 +60,31 @@ export const getAllProducto = (req: Request, res:Response) => {
         }
     });
 }
+export const getProductosByUsuarioInventario = (req: Request, res: Response) => {
+    const { usuarioID, inventarioID } = req.body;
+ 
+    const query = `
+    SELECT Productos.*, Florerias.NombreFloreria, CategoriasProductos.NombreCategoria
+    FROM Productos 
+    INNER JOIN Inventario ON Productos.IDInventario = Inventario.IDInventario
+    INNER JOIN Florerias ON Inventario.IDFloreria = Florerias.ID
+    INNER JOIN CategoriasProductos ON Productos.IDCategoria = CategoriasProductos.ID
+    WHERE Florerias.IDUsuario = ? AND Inventario.IDInventario = ?
+    `;
+
+    connection.query(query, [usuarioID, inventarioID], (err, results) => {
+        if (err) {
+            console.error('Error al obtener productos:', err);
+            res.status(500).json({ message: 'Error interno del servidor' });
+        } else {
+            if (results.length === 0) {
+                res.status(404).json({ message: 'Productos no encontrados' });
+            } else {
+                res.status(200).json(results);
+            }
+        }
+    });
+};
 
 // export const createProducto = (req: Request, res: Response) => {
 //     const producto: Producto = req.body;
