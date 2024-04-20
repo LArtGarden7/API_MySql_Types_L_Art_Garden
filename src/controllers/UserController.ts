@@ -1,5 +1,5 @@
 import multer from 'multer';
-
+import fs from 'fs';
 import path from 'path';
 import bcrypt from 'bcrypt';
 import { authenticateToken, authorizeRole } from '../middleware/AutenticacionDeTokens';
@@ -12,10 +12,15 @@ import { ParsedQs } from 'qs';
 
 //----------------------------------------------------------------------------------------------------------------------------
 
+
+// Check if uploads directory exists, if not, create it
+const uploadsDir = path.resolve(__dirname, process.env.UPLOADS_DIR || 'uploads');
+if (!fs.existsSync(uploadsDir)) {
+    fs.mkdirSync(uploadsDir);
+}
+
 const storage = multer.diskStorage({
     destination: function (req, file, cb) {
-      // Use an environment variable for the uploads directory
-      const uploadsDir = process.env.UPLOADS_DIR || 'uploads';
       cb(null, uploadsDir);
     },
     filename: function (req, file, cb) {
