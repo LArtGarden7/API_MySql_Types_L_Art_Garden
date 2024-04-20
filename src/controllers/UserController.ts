@@ -62,6 +62,7 @@ export const getUserImage: RequestHandler = (req, res) => {
     const filename = req.params.filename;
     // Use an environment variable for the image directory
     const imagePath = path.join(__dirname, process.env.IMAGE_DIR || 'uploads', filename);
+    console.log('Image path:', imagePath);
     if (fs.existsSync(imagePath)) {
         res.sendFile(imagePath);
     } else {
