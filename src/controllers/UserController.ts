@@ -40,15 +40,13 @@ export const getUserByEmailAndPassword: RequestHandler = async (req: Request, re
                 if (match) {
                     const token = jwt.sign({ id: results[0].ID, role: results[0].TipoUsuarioID }, process.env.ACCESS_TOKEN_SECRET as string);
                     delete results[0].Contrasenia;
-                    let imageUrl;
+                    let imageName;
                     if (results[0].Foto) {
-                        // Use an environment variable for the base URL
-                        const baseUrl = process.env.BASE_URL || 'http://localhost:3000';
-                        imageUrl = `${baseUrl}/api/users/image/${path.basename(results[0].Foto)}`;
+                        imageName = path.basename(results[0].Foto);
                     } else {
-                        imageUrl = null; // or you can put a default image URL
+                        imageName = null; // or you can put a default image name
                     }
-                    res.status(200).json({ user: { ...results[0], Foto: imageUrl }, token });
+                    res.status(200).json({ user: { ...results[0], Foto: imageName }, token });
                 } else {
                     res.status(401).json({ message: 'Credenciales incorrectas', error: 'La contraseña no coincide' });
                 }
