@@ -1,6 +1,7 @@
 import express from 'express';
 import dotenv from 'dotenv';
 import cors from 'cors';
+import path from 'path';
 import userRoutes from './routes/UserRoutes';
 import floreriaRoutes from './routes/FloreriaRoutes';
 import tipoUsuarioRoutes from './routes/TipoUsuarioRoutes';
@@ -25,6 +26,7 @@ const app = express();
 const port = process.env.PORT || 3001;
 
 app.use(cors());
+app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
 // Middleware para manejar datos JSON
 app.use(express.json());
