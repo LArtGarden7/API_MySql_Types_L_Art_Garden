@@ -14,12 +14,14 @@ import { ParsedQs } from 'qs';
 
 const storage = multer.diskStorage({
     destination: function (req, file, cb) {
-      cb(null, 'uploads/')
+      // Use an environment variable for the uploads directory
+      const uploadsDir = process.env.UPLOADS_DIR || 'uploads';
+      cb(null, uploadsDir);
     },
     filename: function (req, file, cb) {
       cb(null, Date.now() + path.extname(file.originalname)) //Appending extension
     }
-})
+});
 const upload = multer({ storage: storage });
 
 export const getUserByEmailAndPassword: RequestHandler = async (req: Request, res: Response) => {
@@ -38,9 +40,11 @@ export const getUserByEmailAndPassword: RequestHandler = async (req: Request, re
                     delete results[0].Contrasenia;
                     let imageUrl;
                     if (results[0].Foto) {
-                        imageUrl = `http://localhost:3000/api/users/image/${path.basename(results[0].Foto)}`;
+                        // Use an environment variable for the base URL
+                        const baseUrl = process.env.BASE_URL || 'http://localhost:3000';
+                        imageUrl = `${baseUrl}/api/users/image/${path.basename(results[0].Foto)}`;
                     } else {
-                        imageUrl = null; // o puedes poner una URL de imagen predeterminada
+                        imageUrl = null; // or you can put a default image URL
                     }
                     res.status(200).json({ user: { ...results[0], Foto: imageUrl }, token });
                 } else {
@@ -55,6 +59,7 @@ export const getUserByEmailAndPassword: RequestHandler = async (req: Request, re
 
 export const getUserImage: RequestHandler = (req, res) => {
     const filename = req.params.filename;
+    // Use an environment variable for the image directory
     const imagePath = path.resolve(process.env.IMAGE_DIR || 'uploads', filename);
     res.sendFile(imagePath);
 };
