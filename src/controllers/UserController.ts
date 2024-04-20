@@ -12,7 +12,6 @@ import { ParsedQs } from 'qs';
 
 //----------------------------------------------------------------------------------------------------------------------------
 
-
 // Check if uploads directory exists, if not, create it
 const uploadsDir = path.resolve(__dirname, process.env.UPLOADS_DIR || 'uploads');
 if (!fs.existsSync(uploadsDir)) {
@@ -31,12 +30,10 @@ const upload = multer({ storage: storage });
 
 export const getUserByEmailAndPassword: RequestHandler = async (req: Request, res: Response) => {
     const { CorreoElectronico, Contrasenia } = req.body;
-    console.log("Correo",CorreoElectronico, "contraseña: ", Contrasenia);
     const query = 'SELECT * FROM Usuarios WHERE CorreoElectronico = ?';
     connection.query(query, [CorreoElectronico], async (err, results) => {
         if (err) {
-            console.error('Error al obtener usuario por correo:', err);
-            res.status(500).json({ message: 'Error interno del servidor' });
+            res.status(500).json({ message: 'Error interno del servidor', error: err });
         } else {
             if (results.length > 0) {
                 const match = await bcrypt.compare(Contrasenia, results[0].Contrasenia);
@@ -53,23 +50,22 @@ export const getUserByEmailAndPassword: RequestHandler = async (req: Request, re
                     }
                     res.status(200).json({ user: { ...results[0], Foto: imageUrl }, token });
                 } else {
-                    res.status(401).json({ message: 'Credenciales incorrectas' });
+                    res.status(401).json({ message: 'Credenciales incorrectas', error: 'La contraseña no coincide' });
                 }
             } else {
-                res.status(404).json({ message: 'Credenciales incorrectas' });
+                res.status(404).json({ message: 'Credenciales incorrectas', error: 'No se encontró el usuario' });
             }
         }
     });
 };
-
 export const getUserImage: RequestHandler = (req, res) => {
     const filename = req.params.filename;
     // Use an environment variable for the image directory
-    const imagePath = path.resolve(process.env.IMAGE_DIR || 'uploads', filename);
+    const imagePath = path.join(__dirname, process.env.IMAGE_DIR || 'uploads', filename);
     if (fs.existsSync(imagePath)) {
         res.sendFile(imagePath);
     } else {
-        res.status(404).send('File not found');
+        res.status(404).json({ message: 'File not found', error: `No se encontró el archivo ${filename}` });
     }
 };
 //---------------------------------------------------------------------------------------------------------------------
@@ -100,7 +96,11 @@ export const createUser = [upload.single('Foto'), async (req: Request, res: Resp
 
     // Guardar la ruta de la imagen en el usuario
     if (req.file) {
-        user.Foto = req.file.path;
+        console.log('File:', req.file); // Imprime el objeto file
+        user.Foto = req.file.filename;
+        console.log('Image filename:', user.Foto); // Imprime el nombre del archivo
+    } else {
+        console.log('No file provided'); // Imprime un mensaje si no se proporcionó un archivo
     }
 
     const query = 'INSERT INTO Usuarios SET ?';
@@ -108,14 +108,14 @@ export const createUser = [upload.single('Foto'), async (req: Request, res: Resp
     connection.query(query, user, (err, result) => {
         if (err) {
             console.error('Error al crear usuario:', err);
-            res.status(500).json({ message: 'Error interno del servidor' });
+            res.status(500).json({ message: 'Error interno del servidor', error: err });
         } else {
             // Obtener el rol del usuario de la tabla de roles
             const roleQuery = 'SELECT Tipo FROM TipoUsuario WHERE ID = ?';
             connection.query(roleQuery, user.TipoUsuarioID, (err, roleResult) => {
                 if (err) {
                     console.error('Error al obtener el rol del usuario:', err);
-                    res.status(500).json({ message: 'Error interno del servidor' });
+                    res.status(500).json({ message: 'Error interno del servidor', error: err });
                 } else {
                     // Generar un token para el nuevo usuario
                     const token = jwt.sign({ id: result.insertId, role: roleResult[0].Tipo }, process.env.ACCESS_TOKEN_SECRET as string);
@@ -129,7 +129,6 @@ export const createUser = [upload.single('Foto'), async (req: Request, res: Resp
         }
     });
 }];
-
 export const updateUser = (req: Request, res: Response) => {
     const userID = req.params.id;
     const updatedUser: User = req.body;
