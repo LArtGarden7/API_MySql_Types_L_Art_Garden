@@ -1,4 +1,6 @@
-import { Request, Response } from 'express';
+import { authenticateToken, authorizeRole } from '../middleware/AutenticacionDeTokens';
+import jwt from 'jsonwebtoken';
+import { RequestHandler,Request, Response, NextFunction, response } from 'express';
 import { connection } from '../config/dbconfig';
 import { Floreria } from '../models/Floreria';
 import multer from 'multer';
@@ -6,7 +8,7 @@ import multer from 'multer';
 
 export const getAllFlowers = ((req: Request, res:Response)=>{
     const query = 'SELECT * FROM Florerias';
-
+    
     connection.query(query, (err, results)=>{
         if (err) {
             console.error('Error al obtener florerias:', err);
@@ -18,6 +20,21 @@ export const getAllFlowers = ((req: Request, res:Response)=>{
     });
 });
 //--------------------------------------------------------------------------------------------------------------
+export const getFloreriaByUserId: RequestHandler = (req: Request, res: Response) => {
+    const { IDUsuario } = req.body;
+    const query = 'SELECT * FROM Florerias WHERE IDUsuario = ?';
+    connection.query(query, [IDUsuario], (err, results) => {
+        if (err) {
+            res.status(500).json({ message: 'Error interno del servidor', error: err });
+        } else {
+            if (results.length > 0) {
+                res.status(200).json({ floreria: results[0] });
+            } else {
+                res.status(404).json({ message: 'No se encontró la florería para este usuario', error: 'No se encontró la florería' });
+            }
+        }
+    });
+};
 
 const storage = multer.diskStorage({
     destination: function (req, file, cb) {

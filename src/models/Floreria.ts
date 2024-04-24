@@ -1,4 +1,3 @@
-// models/Floreria.ts
 export interface Floreria {
     ID: number;
     IDUsuario: number;
@@ -9,4 +8,9 @@ export interface Floreria {
     CorreoElectronico: string;
     RedesSociales: string;
     Foto?: string;
+    HoraApertura: string;
+    HoraCierre: string;
+    Longitud: number;
+    Latitud: number;
+    EstadoFloreria: boolean;
 }

@@ -1,9 +1,6 @@
 export interface DetallePedido {
     IDDetalle?: number;
-    IDPedido: number;
-    IDProducto: number;
-    Cantidad: number;
-    PrecioUnitario: number;
-    Subtotal: number;
-    IdEstado: number;
+    MontoIngresado: number;
+    CantidadPedidos: number;
+    MontoTotalAPagar: number;
 }
