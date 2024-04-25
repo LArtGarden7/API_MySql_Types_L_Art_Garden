@@ -74,3 +74,22 @@ export const deletePedido = (req: Request, res: Response) => {
         }
     });
 };
+
+// Función para obtener pedidos por IDInventario
+export const getPedidosByIdInventario = (req: Request, res: Response) => {
+    const IDInventario = req.body.IDInventario;
+    const query = 'SELECT * FROM Pedidos WHERE IDInventario = ?';
+
+    connection.query(query, IDInventario, (err, results) => {
+        if (err) {
+            console.error('Error al obtener pedidos:', err);
+            res.status(500).json({ message: 'Error interno del servidor' });
+        } else {
+            if (results.length === 0) {
+                res.status(404).json({ message: 'No se encontraron pedidos para este IDInventario' });
+            } else {
+                res.status(200).json(results);
+            }
+        }
+    });
+};

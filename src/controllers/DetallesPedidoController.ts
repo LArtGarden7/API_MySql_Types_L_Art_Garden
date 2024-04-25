@@ -8,6 +8,7 @@ export const createDetallePedido = (req: Request, res: Response) => {
     const detallePedido: DetallePedido = req.body;
 
     // Imprimir el objeto detallePedido
+    
     console.log('DetallePedido:', detallePedido);
 
     const query = 'INSERT INTO DetallesPedido SET ?';
