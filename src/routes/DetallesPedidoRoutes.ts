@@ -5,8 +5,8 @@ const router = express.Router();
 
 // Rutas CRUD para DetallePedido
 router.post('/detallePedido', createDetallePedido);
-router.get('/detalle-pedido/:id', getDetallePedidoById);
-router.put('/detalle-pedido/:id', updateDetallePedido);
-router.delete('/detalle-pedido/:id', deleteDetallePedido);
+router.get('/detallePedido/:id', getDetallePedidoById);
+router.put('/detallePedido/:id', updateDetallePedido);
+router.delete('/detallePedido/:id', deleteDetallePedido);
 
 export default router;
