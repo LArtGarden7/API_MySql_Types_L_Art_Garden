@@ -3,12 +3,18 @@ import { connection } from '../config/dbconfig';
 import { DetallePedido } from '../models/DetallesPedido';
 
 // Crear un nuevo detalle de pedido
+// Crear un nuevo detalle de pedido
 export const createDetallePedido = (req: Request, res: Response) => {
     const detallePedido: DetallePedido = req.body;
+
+    // Imprimir el objeto detallePedido
+    console.log('DetallePedido:', detallePedido);
+
     const query = 'INSERT INTO DetallesPedido SET ?';
 
     connection.query(query, detallePedido, (err, result) => {
         if (err) {
+            // Imprimir el error
             console.error('Error al crear detalle de pedido:', err);
             res.status(500).json({ message: 'Error interno del servidor' });
         } else {
