@@ -81,7 +81,7 @@ export const getAllUsers = (req: Request, res: Response) => {
     });
 };
 
-export const createUser = [upload.single('Foto'), async (req: Request, res: Response) => {
+export const    createUser = [upload.single('Foto'), async (req: Request, res: Response) => {
     const user: User = req.body;
 
     console.log('User:', user); // Imprime el objeto user
@@ -153,6 +153,21 @@ export const deleteUser = (req: Request, res: Response) => {
             res.status(500).json({ message: 'Error interno del servidor' });
         } else {
             res.status(200).json({ message: 'Usuario eliminado exitosamente' });
+        }
+    });
+};
+
+export const updateUserAddresses = (req: Request, res: Response) => {
+    
+    const { ID,Direccion1, Direccion2, Direccion3 } = req.body;
+    const query = 'UPDATE Usuarios SET Direccion1 = ?, Direccion2 = ?, Direccion3 = ? WHERE ID = ?';
+
+    connection.query(query, [Direccion1, Direccion2, Direccion3, ID], (err, result) => {
+        if (err) {
+            console.error('Error al actualizar las direcciones del usuario:', err);
+            res.status(500).json({ message: 'Error interno del servidor' });
+        } else {
+            res.status(200).json({ message: 'Direcciones del usuario actualizadas exitosamente' });
         }
     });
 };
