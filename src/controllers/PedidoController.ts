@@ -17,6 +17,20 @@ export const createPedido = (req: Request, res: Response) => {
     });
 };
 
+// Función para crear un nuevo pedido
+export const createPedidoPA = (req: Request, res: Response) => {
+    const { idUsuario, idProducto, cantidad, idTarjetaCliente, idTarjetaVendedor, idEstado, FechaEntrega, HoraEntrega, idInventario, idPedido } = req.body;
+
+    connection.query('CALL RealizarPedido(?, ?, ?, ?, ?, ?, ?, ?, ?, ?)', [idUsuario, idProducto, cantidad, idTarjetaCliente, idTarjetaVendedor, idEstado, FechaEntrega, HoraEntrega, idInventario, idPedido], function (error, results) {
+        if (error) {
+            console.error('Error al realizar el pedido:', error);
+            res.status(500).json({ message: 'Error interno del servidor' });
+        } else {
+            res.status(200).json({ message: 'Pedido realizado exitosamente', results });
+        }
+    });
+};
+
 // Función para obtener un pedido por su ID
 export const getPedidoById = (req: Request, res: Response) => {
     const pedidoID = req.params.id;
