@@ -17,6 +17,24 @@ export const createPedido = (req: Request, res: Response) => {
     });
 };
 
+export const updateEstadoPedido = (req: Request, res: Response) => {
+    const { IDPedido, IDEstado } = req.body;
+    const query = 'UPDATE Pedidos SET IDEstado = ? WHERE IDPedido = ?';
+
+    connection.query(query, [IDEstado, IDPedido], (err, result) => {
+        if (err) {
+            console.error('Error al actualizar el estado del pedido:', err);
+            res.status(500).json({ message: 'Error interno del servidor' });
+        } else {
+            if (result.affectedRows === 0) {
+                res.status(404).json({ message: 'Pedido no encontrado' });
+            } else {
+                res.status(200).json({ message: 'Estado del pedido actualizado exitosamente' });
+            }
+        }
+    });
+};
+
 // Función para crear un nuevo pedido
 export const createPedidoPA = (req: Request, res: Response) => {
     const { idUsuario, idProducto, cantidad, idTarjetaCliente, idTarjetaVendedor, idEstado, FechaEntrega, HoraEntrega, idInventario, idPedido } = req.body;

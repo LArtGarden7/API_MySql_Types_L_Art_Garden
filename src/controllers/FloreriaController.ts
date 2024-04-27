@@ -58,28 +58,33 @@ export const createFloreria = [upload.single('Foto'), (req: Request, res: Respon
         floreria.Foto = req.file.path;
     }
 
-    const query = 'CALL InsertarFloreria(?, ?, ?, ?, ?, ?, ?, ?)';
+    const query = 'CALL InsertarFloreria(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)';
 
     connection.query(
-        query,
-        [
-            floreria.IDUsuario,
-            floreria.NombreFloreria,
-            floreria.Descripcion,
-            floreria.Direccion,
-            floreria.Telefono,
-            floreria.CorreoElectronico,
-            floreria.RedesSociales,
-            floreria.Foto
-        ],
-        (err, result) => {
-            if (err) {
-                console.error('Error al crear florería:', err);
-                res.status(500).json({ message: 'Error interno del servidor' });
-            } else {
-                res.status(201).json({message: "Floreria creada con exito"}); // Envía una respuesta de estado 201 (Created) sin contenido adicional
-            }
+    query,
+    [
+        floreria.IDUsuario,
+        floreria.NombreFloreria,
+        floreria.Descripcion,
+        floreria.Direccion,
+        floreria.Telefono,
+        floreria.CorreoElectronico,
+        floreria.RedesSociales,
+        floreria.Foto,
+        floreria.HoraApertura,
+        floreria.HoraCierre,
+        floreria.Longitud,
+        floreria.Latitud,
+        floreria.EstadoFloreria
+    ],
+    (err, result) => {
+        if (err) {
+        console.error('Error al crear florería:', err);
+        res.status(500).json({ message: 'Error interno del servidor' });
+        } else {
+        res.status(201).json({message: "Floreria creada con exito"});
         }
+    }
     );
 }];
 //--------------------------------------------------------------------------------------------------------------
