@@ -159,10 +159,10 @@ export const deleteUser = (req: Request, res: Response) => {
 
 export const updateUserAddresses = (req: Request, res: Response) => {
     
-    const { ID,Direccion1, Direccion2, Direccion3 } = req.body;
-    const query = 'UPDATE Usuarios SET Direccion1 = ?, Direccion2 = ?, Direccion3 = ? WHERE ID = ?';
+    const { ID,Direccion1, Direccion2, Direccion3, Longitud, Latitud } = req.body;
+    const query = 'UPDATE Usuarios SET Direccion1 = ?, Direccion2 = ?, Direccion3 = ?, Longitud = ? , Latitud = ? WHERE ID = ?';
 
-    connection.query(query, [Direccion1, Direccion2, Direccion3, ID], (err, result) => {
+    connection.query(query, [Direccion1, Direccion2, Direccion3, Longitud, Latitud, ID], (err, result) => {
         if (err) {
             console.error('Error al actualizar las direcciones del usuario:', err);
             res.status(500).json({ message: 'Error interno del servidor' });
