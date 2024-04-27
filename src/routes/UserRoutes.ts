@@ -1,11 +1,12 @@
 // routes/UserRoutes.ts
 import express from 'express';
-import { updateUserAddresses,createUser, deleteUser, getAllUsers, getUserByEmailAndPassword, getUserImage, updateUser } from '../controllers/UserController';
+import {getUserById,updateUserAddresses,createUser, deleteUser, getAllUsers, getUserByEmailAndPassword, getUserImage, updateUser } from '../controllers/UserController';
 
 const router = express.Router();
 
 router.get('/userImage/:filename', getUserImage);
 router.get('/users', getAllUsers);
+router.post('/userById', getUserById);
 router.post('/UpdateAdress', updateUserAddresses);
 router.post('/user', getUserByEmailAndPassword);
 router.post('/users', createUser);

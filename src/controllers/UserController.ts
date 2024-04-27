@@ -171,3 +171,21 @@ export const updateUserAddresses = (req: Request, res: Response) => {
         }
     });
 };
+
+export const getUserById = (req: Request, res: Response) => {
+    const ID = req.body.ID;
+    const query = 'SELECT * FROM Usuarios WHERE ID = ?';
+
+    connection.query(query, ID, (err, result) => {
+        if (err) {
+            console.error('Error al obtener usuario:', err);
+            res.status(500).json({ message: 'Error interno del servidor' });
+        } else {
+            if (result.length === 0) {
+                res.status(404).json({ message: 'Usuario no encontrado' });
+            } else {
+                res.status(200).json(result[0]);
+            }
+        }
+    });
+}
