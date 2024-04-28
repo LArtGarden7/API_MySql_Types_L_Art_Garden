@@ -19,7 +19,7 @@ export const createEstado = (req: Request, res: Response) => {
 
 // Obtiene un estado por su ID
 export const getEstadoById = (req: Request, res: Response) => {
-    const estadoID = req.params.id;
+    const estadoID = req.body.IDEstado;
     const query = 'SELECT * FROM Estados WHERE IDEstado = ?';
 
     connection.query(query, estadoID, (err, result) => {
