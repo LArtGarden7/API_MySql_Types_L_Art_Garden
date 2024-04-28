@@ -4,7 +4,7 @@ import { getFloreriaImage, getFloreriaByUserId, createFloreria, getFloreriaById,
 const router = express.Router();
 
 router.get('/flowerShops', getAllFlowers);
-router.post('/flowerShops', createFloreria);
+router.post('/createFlowerShop', createFloreria);
 router.get('/flowerShops/:id', getFloreriaById);
 router.put('/flowerShops/:id', updateFloreria);
 router.delete('/flowerShops/:id', deleteFloreria);

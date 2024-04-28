@@ -1,5 +1,5 @@
 import express from 'express';
-import { createProductos, getProductoById, updateProducto, deleteProducto,getProductosByUsuarioInventario, getAllProducto } from '../controllers/ProductoController';
+import { createProductosCloudD, createProductos, getProductoById, updateProducto, deleteProducto,getProductosByUsuarioInventario, getAllProducto } from '../controllers/ProductoController';
 
 const router = express.Router();
 
@@ -11,5 +11,8 @@ router.post('/products', createProductos);
 router.get('/products/:id', getProductoById);
 router.put('/products/:id', updateProducto);
 router.delete('/products/:id', deleteProducto);
+
+router.post('/createProductos', createProductosCloudD);
+
 
 export default router;
