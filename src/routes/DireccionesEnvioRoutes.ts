@@ -5,7 +5,7 @@ const router = express.Router();
 
 // Rutas CRUD para Direcciones de Envío
 router.post('/direcciones-envio', createDireccionEnvio);
-router.get('/direcciones-envio/:id', getDireccionEnvioById);
+router.post('/direcciones-envio/:id', getDireccionEnvioById);
 router.put('/direcciones-envio/:id', updateDireccionEnvio);
 router.delete('/direcciones-envio/:id', deleteDireccionEnvio);
 

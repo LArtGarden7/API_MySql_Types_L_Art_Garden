@@ -5,7 +5,7 @@ const router = express.Router();
 
 // Rutas CRUD para Devoluciones
 router.post('/devoluciones', createDevolucion);
-router.get('/devoluciones/:id', getDevolucionById);
+router.post('/devoluciones/:id', getDevolucionById);
 router.put('/devoluciones/:id', updateDevolucion);
 router.delete('/devoluciones/:id', deleteDevolucion);
 

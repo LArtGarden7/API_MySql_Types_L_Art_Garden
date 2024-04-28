@@ -49,10 +49,10 @@ export const createPedidoPA = (req: Request, res: Response) => {
     });
 };
 
-// Función para obtener un pedido por su ID
-export const getPedidoById = (req: Request, res: Response) => {
-    const pedidoID = req.params.id;
-    const query = 'SELECT * FROM Pedidos WHERE IDPedido = ?';
+// Función para obtener un pedido por su ID de usuario
+export const getPedidoByUserId = (req: Request, res: Response) => {
+    const pedidoID = req.body.IDUsuario;
+    const query = 'SELECT * FROM Pedidos WHERE IDUsuario = ?';
 
     connection.query(query, pedidoID, (err, result) => {
         if (err) {
@@ -62,7 +62,7 @@ export const getPedidoById = (req: Request, res: Response) => {
             if (result.length === 0) {
                 res.status(404).json({ message: 'Pedido no encontrado' });
             } else {
-                res.status(200).json(result[0]);
+                res.status(200).json(result); // Devuelve todos los registros
             }
         }
     });

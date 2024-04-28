@@ -13,4 +13,5 @@ export interface Pedido {
   IDDetallePedido?: number;
   FechaEntrega?: Date;
   HoraEntrega?: string;
+  ImagenReferencia?: string;
 }

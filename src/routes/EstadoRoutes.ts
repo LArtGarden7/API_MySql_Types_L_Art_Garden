@@ -5,7 +5,7 @@ const router = express.Router();
 
 // Rutas CRUD para Estados
 router.post('/estados', createEstado);
-router.get('/estados/:id', getEstadoById);
+router.post('/estados/:id', getEstadoById);
 router.put('/estados/:id', updateEstado);
 router.delete('/estados/:id', deleteEstado);
 

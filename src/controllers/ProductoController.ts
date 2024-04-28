@@ -71,7 +71,6 @@ export const createProductosCloudD = [uploadConfig.fields([{ name: 'Imagen1', ma
     });
 }];
 
-
 export const getAllProducto = (req: Request, res:Response) => {
     const query = `
         SELECT Productos.*, Florerias.NombreFloreria, CategoriasProductos.NombreCategoria

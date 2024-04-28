@@ -36,6 +36,25 @@ export const getTarjetaCreditoById = (req: Request, res: Response) => {
     });
 };
 
+//Obtener Tarjeta de Credito por medio de todos los datos
+export const getTarjetaCreditoByData = (req: Request, res: Response) => {
+    const tarjeta: TarjetaCredito = req.body;
+    const query = 'SELECT * FROM TarjetasCredito WHERE IDTarjeta = ? AND IDUsuario = ? AND NumeroTarjeta = ? AND NombreTitular = ? AND ApellidoTitular = ? AND FechaExpiracion = ? AND CodigoSeguridad = ? AND Saldo = ?';
+
+    connection.query(query, [tarjeta.IDTarjeta, tarjeta.IDUsuario, tarjeta.NumeroTarjeta, tarjeta.NombreTitular, tarjeta.ApellidoTitular, tarjeta.FechaExpiracion, tarjeta.CodigoSeguridad, tarjeta.Saldo], (err, result) => {
+        if (err) {
+            console.error('Error al obtener tarjeta:', err);
+            res.status(500).json({ message: 'Error interno del servidor' });
+        } else {
+            if (result.length === 0) {
+                res.status(404).json({ message: 'Tarjeta no encontrada' });
+            } else {
+                res.status(200).json(result[0]);
+            }
+        }
+    });
+};
+
 // Actualiza una tarjeta de crédito existente
 export const updateTarjetaCredito = (req: Request, res: Response) => {
     const tarjetaID = req.params.id;
