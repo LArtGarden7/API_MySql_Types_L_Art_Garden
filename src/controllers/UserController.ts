@@ -9,6 +9,7 @@ import { connection } from '../config/dbconfig';
 import { User } from '../models/User';
 import { ParamsDictionary } from 'express-serve-static-core';
 import { ParsedQs } from 'qs';
+import uploadConfig from '../config/cloudinaryConfig'; // Cambia 'upload' a 'uploadConfig'
 
 //----------------------------------------------------------------------------------------------------------------------------
 
@@ -27,6 +28,46 @@ const storage = multer.diskStorage({
     }
 });
 const upload = multer({ storage: storage });
+
+export const createUserCloudD = [uploadConfig.single('Foto'), async (req: Request, res: Response) => {
+    const user: User = req.body;
+
+    // Hashear la Contrasenia
+    const saltRounds = 10;
+    user.Contrasenia = await bcrypt.hash(user.Contrasenia, saltRounds);
+
+    // Guardar la ruta de la imagen en el usuario
+    if (req.file) {
+        user.Foto = req.file.path; // Aquí se guarda la URL de la imagen en Cloudinary
+    } else {
+        console.log('No file provided'); // Imprime un mensaje si no se proporcionó un archivo
+    }
+
+    const query = 'INSERT INTO Usuarios SET ?';
+
+    connection.query(query, user, (err, result) => {
+        if (err) {
+            console.error('Error al crear usuario:', err);
+            res.status(500).json({ message: 'Error interno del servidor', error: err });
+        } else {
+            // Obtener el rol del usuario de la tabla de roles
+            const roleQuery = 'SELECT Tipo FROM TipoUsuario WHERE ID = ?';
+            connection.query(roleQuery, user.TipoUsuarioID, (err, roleResult) => {
+                if (err) {
+                    console.error('Error al obtener el rol del usuario:', err);
+                    res.status(500).json({ message: 'Error interno del servidor', error: err });
+                } else {
+                    // Generar un token para el nuevo usuario
+                    const token = jwt.sign({ id: result.insertId, role: roleResult[0].Tipo }, process.env.ACCESS_TOKEN_SECRET as string);
+
+                    // Enviar el token al cliente
+                    res.status(201).json({ message: 'Usuario creado exitosamente', userID: result.insertId, token });
+                }
+            });
+        }
+    });
+}];
+
 
 export const getUserByEmailAndPassword: RequestHandler = async (req: Request, res: Response) => {
     const { CorreoElectronico, Contrasenia } = req.body;

@@ -1,6 +1,6 @@
 // routes/UserRoutes.ts
 import express from 'express';
-import {getUserById,updateUserAddresses,createUser, deleteUser, getAllUsers, getUserByEmailAndPassword, getUserImage, updateUser } from '../controllers/UserController';
+import { createUserCloudD, getUserById,updateUserAddresses,createUser, deleteUser, getAllUsers, getUserByEmailAndPassword, getUserImage, updateUser } from '../controllers/UserController';
 
 const router = express.Router();
 
@@ -12,5 +12,8 @@ router.post('/user', getUserByEmailAndPassword);
 router.post('/users', createUser);
 router.put('/users/:id', updateUser);
 router.delete('/users/:id', deleteUser);
+
+router.post('/createAccount', createUserCloudD);
+
 
 export default router;
