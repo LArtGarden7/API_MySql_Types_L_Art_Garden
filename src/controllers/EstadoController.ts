@@ -22,7 +22,7 @@ export const getEstadoById = (req: Request, res: Response) => {
     const estadoID = req.body.IDEstado;
     const query = 'SELECT * FROM Estados WHERE IDEstado = ?';
 
-    connection.query(query, estadoID, (err, result) => {
+    connection.query(query, [estadoID], (err, result) => {
         if (err) {
             console.error('Error al obtener estado:', err);
             res.status(500).json({ message: 'Error interno del servidor' });
